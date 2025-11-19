@@ -1,0 +1,275 @@
+import telebot
+from telebot import types
+import random
+
+TOKEN = "8502640628:AAENpEP5Pw3RPIzuyNq6YhaW1YhkaPIPgzs"
+bot = telebot.TeleBot(TOKEN)
+
+# Harflar
+hiragana = {"a":"あ","i":"い","u":"う","e":"え","o":"お",
+            "ka":"か","ki":"き","ku":"く","ke":"け","ko":"こ",
+            "sa":"さ","shi":"し","su":"す","se":"せ","so":"そ"}
+
+katakana = {"a":"ア","i":"イ","u":"ウ","e":"エ","o":"オ",
+            "ka":"カ","ki":"キ","ku":"ク","ke":"ケ","ko":"コ",
+            "sa":"サ","shi":"シ","su":"ス","se":"セ","so":"ソ"}
+
+# So‘zlar (chegaraga sig‘adigan qisqa versiya, keyin kengaytiriladi)
+words_500 = [
+{"jp":"みず","uz":"suv","romaji":"mizu"},
+{"jp":"せんせい","uz":"ustoz","romaji":"sensei"},
+{"jp":"まなぶ","uz":"o‘rganmoq","romaji":"manabu"},
+{"jp":"ねこ","uz":"mushuk","romaji":"neko"},
+{"jp":"いぬ","uz":"it","romaji":"inu"},
+{"jp":"やま","uz":"tog‘","romaji":"yama"},
+{"jp":"かわ","uz":"daryo","romaji":"kawa"},
+{"jp":"ほん","uz":"kitob","romaji":"hon"},
+{"jp":"がっこう","uz":"maktab","romaji":"gakkou"},
+{"jp":"くるま","uz":"mashina","romaji":"kuruma"},
+{"jp":"とけい","uz":"soat","romaji":"tokei"},
+{"jp":"ひと","uz":"odam","romaji":"hito"},
+{"jp":"いえ","uz":"uy","romaji":"ie"},
+{"jp":"ねこ","uz":"mushuk","romaji":"neko"},
+{"jp":"はな","uz":"gul","romaji":"hana"},
+{"jp":"くに","uz":"davlat","romaji":"kuni"},
+{"jp":"そら","uz":"osmon","romaji":"sora"},
+{"jp":"みせ","uz":"do‘kon","romaji":"mise"},
+{"jp":"まち","uz":"shahar","romaji":"machi"},
+{"jp":"やさい","uz":"sabzavot","romaji":"yasai"},
+{"jp":"くだもの","uz":"meva","romaji":"kudamono"},
+{"jp":"たまご","uz":"tuxum","romaji":"tamago"},
+{"jp":"さかな","uz":"baliq","romaji":"sakana"},
+{"jp":"とり","uz":"qush","romaji":"tori"},
+{"jp":"いけ","uz":"hovuz","romaji":"ike"},
+{"jp":"うみ","uz":"dengiz","romaji":"umi"},
+{"jp":"たけ","uz":"bambuk","romaji":"take"},
+{"jp":"くさ","uz":"o‘t","romaji":"kusa"},
+{"jp":"き","uz":"daraxt","romaji":"ki"},
+{"jp":"はし","uz":"ko‘prik","romaji":"hashi"},
+{"jp":"いし","uz":"tosh","romaji":"ishi"},
+{"jp":"つき","uz":"oy","romaji":"tsuki"},
+{"jp":"ひ","uz":"quyosh","romaji":"hi"},
+{"jp":"つち","uz":"tuproq","romaji":"tsuchi"},
+{"jp":"そと","uz":"tashqarida","romaji":"soto"},
+{"jp":"なか","uz":"ichida","romaji":"naka"},
+{"jp":"みぎ","uz":"o‘ng","romaji":"migi"},
+{"jp":"ひだり","uz":"chap","romaji":"hidari"},
+{"jp":"まえ","uz":"oldida","romaji":"mae"},
+{"jp":"うしろ","uz":"orqada","romaji":"ushiro"},
+{"jp":"あし","uz":"oyoqlar","romaji":"ashi"},
+{"jp":"て","uz":"qo‘l","romaji":"te"},
+{"jp":"かお","uz":"yuz","romaji":"kao"},
+{"jp":"め","uz":"ko‘z","romaji":"me"},
+{"jp":"みみ","uz":"quloq","romaji":"mimi"},
+{"jp":"くち","uz":"og‘iz","romaji":"kuchi"},
+{"jp":"は","uz":"tish","romaji":"ha"},
+{"jp":"ゆび","uz":"barmoq","romaji":"yubi"},
+{"jp":"くび","uz":"bo‘yin","romaji":"kubi"},
+{"jp":"かた","uz":"elka","romaji":"kata"},
+{"jp":"むね","uz":"ko‘krak","romaji":"mune"},
+{"jp":"せなか","uz":"orqa","romaji":"senaka"},
+{"jp":"こし","uz":"bel","romaji":"koshi"},
+{"jp":"あたま","uz":"bosh","romaji":"atama"},
+{"jp":"め","uz":"ko‘z","romaji":"me"},
+{"jp":"くも","uz":"bulut","romaji":"kumo"},
+{"jp":"そら","uz":"osmon","romaji":"sora"},
+{"jp":"ひかり","uz":"yorug‘lik","romaji":"hikari"},
+{"jp":"かぜ","uz":"shamol","romaji":"kaze"},
+{"jp":"あめ","uz":"yomg‘ir","romaji":"ame"},
+{"jp":"ゆき","uz":"qor","romaji":"yuki"},
+{"jp":"はれ","uz":"quyoshli","romaji":"hare"},
+{"jp":"くもり","uz":"bulutli","romaji":"kumori"},
+{"jp":"たいよう","uz":"quyosh","romaji":"taiyou"},
+{"jp":"つゆ","uz":"mavsum yomg‘iri","romaji":"tsuyu"},
+{"jp":"ほし","uz":"yulduz","romaji":"hoshi"},
+{"jp":"つなみ","uz":"to‘lqin","romaji":"tsunami"},
+{"jp":"かい","uz":"dengiz mahsuloti","romaji":"kai"},
+{"jp":"さば","uz":"skumbriya","romaji":"saba"},
+{"jp":"いか","uz":"kalamush","romaji":"ika"},
+{"jp":"たこ","uz":"oktupus","romaji":"tako"},
+{"jp":"えび","uz":"krevetka","romaji":"ebi"},
+{"jp":"にく","uz":"go‘sht","romaji":"niku"},
+{"jp":"さとう","uz":"shakar","romaji":"satou"},
+{"jp":"しお","uz":"tuz","romaji":"shio"},
+{"jp":"みそ","uz":"miso","romaji":"miso"},
+{"jp":"さけ","uz":"losos","romaji":"sake"},
+{"jp":"ちゃ","uz":"choy","romaji":"cha"},
+{"jp":"みるく","uz":"sut","romaji":"miruku"},
+{"jp":"ごはん","uz":"guruch","romaji":"gohan"},
+{"jp":"パン","uz":"non","romaji":"pan"},
+{"jp":"たまご","uz":"tuxum","romaji":"tamago"},
+{"jp":"やさい","uz":"sabzavot","romaji":"yasai"},
+{"jp":"くだもの","uz":"meva","romaji":"kudamono"},
+{"jp":"さかな","uz":"baliq","romaji":"sakana"},
+{"jp":"にく","uz":"go‘sht","romaji":"niku"},
+{"jp":"とり","uz":"tovuq","romaji":"tori"},
+{"jp":"しょくどう","uz":"oshxona","romaji":"shokudou"},
+{"jp":"れいぞうこ","uz":"muzlatkich","romaji":"reizouko"},
+{"jp":"でんき","uz":"elektr","romaji":"denki"},
+{"jp":"でんわ","uz":"telefon","romaji":"denwa"},
+{"jp":"くるま","uz":"mashina","romaji":"kuruma"},
+{"jp":"じてんしゃ","uz":"velosiped","romaji":"jitensha"},
+{"jp":"でんしゃ","uz":"poezd","romaji":"densha"},
+{"jp":"ひこうき","uz":"samolyot","romaji":"hikouki"},
+{"jp":"ふね","uz":"kema","romaji":"fune"},
+{"jp":"うみ","uz":"dengiz","romaji":"umi"},
+{"jp":"かわ","uz":"daryo","romaji":"kawa"},
+{"jp":"やま","uz":"tog‘","romaji":"yama"},
+{"jp":"もり","uz":"o‘rmon","romaji":"mori"},
+{"jp":"はな","uz":"gul","romaji":"hana"},
+{"jp":"き","uz":"daraxt","romaji":"ki"},
+{"jp":"くさ","uz":"o‘t","romaji":"kusa"},
+{"jp":"いけ","uz":"hovuz","romaji":"ike"},
+{"jp":"にわ","uz":"bog‘","romaji":"niwa"},
+{"jp":"そと","uz":"tashqarida","romaji":"soto"},
+{"jp":"なか","uz":"ichida","romaji":"naka"},
+{"jp":"まえ","uz":"oldida","romaji":"mae"},
+{"jp":"うしろ","uz":"orqada","romaji":"ushiro"},
+{"jp":"みぎ","uz":"o‘ng","romaji":"migi"},
+{"jp":"ひだり","uz":"chap","romaji":"hidari"},
+{"jp":"うえ","uz":"yuqorida","romaji":"ue"},
+{"jp":"した","uz":"pastda","romaji":"shita"},
+{"jp":"ちか","uz":"yaqin","romaji":"chika"},
+{"jp":"とお","uz":"uzoqlik","romaji":"too"},
+{"jp":"ひる","uz":"kun","romaji":"hiru"},
+{"jp":"よる","uz":"kech","romaji":"yoru"},
+{"jp":"あさ","uz":"ertalab","romaji":"asa"},
+{"jp":"ばん","uz":"kechqurun","romaji":"ban"},
+{"jp":"せんしゅう","uz":"o‘tgan hafta","romaji":"senshuu"},
+{"jp":"こんしゅう","uz":"shu","romaji":"konshuu"},
+{"jp":"らいしゅう","uz":"kelasi hafta","romaji":"raishuu"},
+{"jp":"きょう","uz":"bugun","romaji":"kyou"},
+{"jp":"あした","uz":"ertaga","romaji":"ashita"},
+{"jp":"きのう","uz":"kecha","romaji":"kinou"},
+{"jp":"みず","uz":"suv","romaji":"mizu"},
+{"jp":"せんせい","uz":"ustoz","romaji":"sensei"},
+{"jp":"まなぶ","uz":"o‘rganmoq","romaji":"manabu"},
+{"jp":"ねこ","uz":"mushuk","romaji":"neko"},
+{"jp":"いぬ","uz":"it","romaji":"inu"},
+{"jp":"やま","uz":"tog‘","romaji":"yama"},
+{"jp":"かわ","uz":"daryo","romaji":"kawa"},
+{"jp":"ほん","uz":"kitob","romaji":"hon"},
+{"jp":"がっこう","uz":"maktab","romaji":"gakkou"},
+{"jp":"くるま","uz":"mashina","romaji":"kuruma"},
+# Davom ettirish mumkin, jami 500 ta
+]
+
+# Foydalanuvchi holati
+users = {}
+
+def init_user(uid):
+    users[uid] = {
+        "mode":"hiragana",    # hiragana, katakana, aralash
+        "streak":0,           # harf quizdagi ketma-ket to‘g‘ri javob
+        "used_words_quiz": set(),
+        "used_words_lugat": set(),
+        "waiting_word_quiz": False  # True bo‘lsa 1 ta so‘z quiz yuboriladi
+    }
+
+# Menu yaratish
+def main_menu(uid):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add("Hiragana","Katakana","Aralash")
+    markup.add("Lug‘atlar")
+    return markup
+
+# Harf quiz yuborish
+def send_letter_quiz(chat_id):
+    u = users[chat_id]
+    pool = hiragana if u["mode"]=="hiragana" else katakana if u["mode"]=="katakana" else {**hiragana,**katakana}
+    correct_romaji = random.choice(list(pool.keys()))
+    correct_jp = pool[correct_romaji]
+
+    opts = [correct_jp]
+    while len(opts)<3:
+        o = random.choice(list(pool.values()))
+        if o not in opts:
+            opts.append(o)
+    random.shuffle(opts)
+
+    question = f"'{correct_romaji}' harfi qaysi yaponcha belgiga to‘g‘ri keladi?"
+    bot.send_poll(chat_id, question=question, options=opts, type="quiz",
+                  correct_option_id=opts.index(correct_jp), is_anonymous=False)
+
+# So‘z quiz yuborish
+def send_word_quiz(chat_id):
+    u = users[chat_id]
+    remaining_words = [w for w in words_500 if w["jp"] not in u.get("used_words_quiz", set())]
+    if not remaining_words:
+        remaining_words = words_500
+        u["used_words_quiz"] = set()
+
+    correct_word = random.choice(remaining_words)
+    u.setdefault("used_words_quiz", set()).add(correct_word["jp"])
+
+    opts = [correct_word["jp"]]
+    while len(opts)<3:
+        o = random.choice([w["jp"] for w in words_500])
+        if o not in opts:
+            opts.append(o)
+    random.shuffle(opts)
+
+    question = f"'{correct_word['romaji']}' so‘zi qaysi variantda to‘g‘ri yozilgan?"
+    bot.send_poll(chat_id, question=question, options=opts, type="quiz",
+                  correct_option_id=opts.index(correct_word["jp"]), is_anonymous=False)
+
+# Quiz yuborish
+def send_quiz(chat_id):
+    u = users[chat_id]
+    if u["waiting_word_quiz"]:
+        u["waiting_word_quiz"] = False
+        send_word_quiz(chat_id)
+    else:
+        send_letter_quiz(chat_id)
+
+# Poll javobini qayta ishlash
+@bot.poll_answer_handler()
+def handle_poll(answer):
+    uid = answer.user.id
+    if uid not in users:
+        init_user(uid)
+    u = users[uid]
+
+    # Harf quiz ketma-ket javobni hisoblash
+    u["streak"] += 1
+
+    # 5 ketma-ket to'g'ri → 1 ta so‘z quiz yuboriladi keyingi safar
+    if u["streak"] >=5:
+        u["streak"] = 0
+        u["waiting_word_quiz"] = True
+        bot.send_message(uid,"🎉 5 ta ketma-ket to‘g‘ri! Endi 1 ta so‘z quiz keladi!")
+
+    send_quiz(uid)
+
+# Start komandasi
+@bot.message_handler(commands=["start"])
+def cmd_start(message):
+    init_user(message.chat.id)
+    bot.send_message(message.chat.id,"Rejimni tanlang:", reply_markup=main_menu(message.chat.id))
+
+# Tugmalarni boshqarish
+@bot.message_handler(func=lambda m: True)
+def text_handler(message):
+    uid = message.chat.id
+    if uid not in users:
+        init_user(uid)
+
+    if message.text in ["Hiragana","Katakana","Aralash"]:
+        users[uid]["mode"]=message.text.lower()
+        bot.send_message(uid,f"{message.text} rejimi tanlandi.", reply_markup=main_menu(uid))
+        send_quiz(uid)
+
+    elif message.text=="Lug‘atlar":
+        remaining_words = [w for w in words_500 if w["jp"] not in users[uid]["used_words_lugat"]]
+        if not remaining_words:
+            bot.send_message(uid,"📝 Barcha so‘zlar Lug‘atlar menyusida yuborildi.", reply_markup=main_menu(uid))
+            return
+        sample_words = random.sample(remaining_words, min(30,len(remaining_words)))
+        users[uid]["used_words_lugat"].update([w["jp"] for w in sample_words])
+        msg = "📝 Tasodifiy 30 ta yaponcha so‘z:\n" + "\n".join([f"{w['romaji']} → {w['jp']}" for w in sample_words])
+        bot.send_message(uid,msg,reply_markup=main_menu(uid))
+
+    else:
+        bot.send_message(uid,"Rejim tanlang yoki 'Lug‘atlar' tugmasini bosing.", reply_markup=main_menu(uid))
+
+bot.infinity_polling()
